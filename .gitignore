@@ -1,0 +1,25 @@
+# Build artifacts
+/target/
+/dist/
+
+# Certificates (sensitive!)
+/certs/
+*.pfx
+*.p12
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Claude Code
+.claude/

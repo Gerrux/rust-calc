@@ -1,0 +1,44 @@
+[package]
+name = "rust-calc"
+version = "1.0.0"
+edition = "2021"
+authors = ["gerrux"]
+description = "Lightweight scientific calculator with modern dark UI"
+license = "MIT"
+repository = "https://github.com/gerrux/rust-calc"
+keywords = ["calculator", "scientific", "gui", "egui"]
+categories = ["gui", "mathematics"]
+readme = "README.md"
+
+[dependencies]
+meval = "0.2"
+
+# eframe without bundled fonts (saves ~400KB)
+[target.'cfg(target_os = "windows")'.dependencies]
+eframe = { version = "0.30", default-features = false, features = ["glow"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+eframe = { version = "0.30", default-features = false, features = ["glow", "x11"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+eframe = { version = "0.30", default-features = false, features = ["glow"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.release-fast]
+inherits = "release"
+opt-level = 3
+lto = "thin"
+
+[build-dependencies]
+winresource = "0.1"
+
+[package.metadata.bundle]
+name = "Calculator"
+identifier = "com.gerrux.rustcalc"
+icon = ["assets/icon.png"]
