@@ -31,7 +31,7 @@ jobs:
             artifact: rust-calc-windows-x64
             binary: rust-calc.exe
             use_upx: true
-          - os: macos-13
+          - os: macos-15
             target: x86_64-apple-darwin
             artifact: rust-calc-macos-x64
             binary: rust-calc
