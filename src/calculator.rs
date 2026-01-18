@@ -7,6 +7,7 @@ pub struct Calculator {
     pub last_result: Option<f64>,
     pub angle_mode: AngleMode,
     pub open_parens: i32,
+    result_shown: bool,
 }
 
 #[derive(Clone)]
@@ -30,6 +31,7 @@ impl Default for Calculator {
             last_result: None,
             angle_mode: AngleMode::Degrees,
             open_parens: 0,
+            result_shown: false,
         }
     }
 }
@@ -37,6 +39,12 @@ impl Default for Calculator {
 impl Calculator {
     /// Input a digit (0-9)
     pub fn input_digit(&mut self, digit: &str) {
+        if self.result_shown {
+            self.expression.clear();
+            self.display = String::from("0");
+            self.result_shown = false;
+        }
+
         if self.display == "0" && digit != "." {
             self.display = digit.to_string();
         } else {
@@ -47,6 +55,12 @@ impl Calculator {
 
     /// Input decimal point with validation
     pub fn input_decimal(&mut self) {
+        if self.result_shown {
+            self.expression.clear();
+            self.display = String::from("0");
+            self.result_shown = false;
+        }
+
         // Find the last number in expression and check if it has a decimal
         let last_num = self
             .expression
@@ -67,6 +81,8 @@ impl Calculator {
 
     /// Input operator with validation (prevents consecutive operators)
     pub fn input_operator(&mut self, op: &str) {
+        self.result_shown = false;
+
         if self.expression.is_empty() {
             if op == "−" {
                 self.expression.push_str(op);
@@ -114,6 +130,12 @@ impl Calculator {
 
     /// Input constant (π, e)
     pub fn input_constant(&mut self, constant: &str) {
+        if self.result_shown {
+            self.expression.clear();
+            self.display = String::from("0");
+            self.result_shown = false;
+        }
+
         // Add implicit multiplication if needed
         if !self.expression.is_empty() {
             let last = self.expression.chars().last().unwrap();
@@ -239,10 +261,13 @@ impl Calculator {
         self.expression.clear();
         self.display = String::from("0");
         self.open_parens = 0;
+        self.result_shown = false;
     }
 
     /// Clear last entry (backspace) - handles multi-byte unicode
     pub fn clear_entry(&mut self) {
+        self.result_shown = false;
+
         if self.expression.is_empty() {
             return;
         }
@@ -308,6 +333,7 @@ impl Calculator {
                     self.expression = formatted.clone();
                     self.display = formatted;
                     self.open_parens = 0;
+                    self.result_shown = true;
 
                     Ok(result)
                 }
